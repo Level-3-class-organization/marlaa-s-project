@@ -1,11 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   ImageBackground,
-  Image,
   StyleSheet,
   Text,
   View,
-  Pressable,
   ScrollView,
   TextInput,
 } from "react-native";
@@ -15,7 +13,27 @@ import CheckBox from "@react-native-community/checkbox";
 import Water from "../components/Water";
 import Clock from "../components/Clock";
 
-export const HomePage = () => {
+export const HomePage = (props) => {
+  const [dateState, setDateState] = useState(new Date());
+  useEffect(() => {
+    setInterval(() => setDateState(new Date()), 30000);
+  }, []);
+  const { navigation } = props;
+  const onJournalPress = () => {
+    navigation.navigate("Journal Page");
+  };
+  const onToDoPress = () => {
+    navigation.navigate("To-Do Page");
+  };
+  const onLogsPress = () => {
+    navigation.navigate("Logs Page");
+  };
+  const onHomePress = () => {
+    navigation.navigate("Home Page");
+  };
+  const onSignOutPress = () => {
+    navigation.navigate("Login Page");
+  };
   const [loaded] = useFonts({
     Mulish1: require("../assets/Mulish1.ttf"),
   });
@@ -29,14 +47,33 @@ export const HomePage = () => {
         style={styles.backgroundImage}
         source={require("../assets/DarkerDots.png")}
       >
-        <Header color="#9A9E8C" />
+        <Header
+          onJournalPress={onJournalPress}
+          onHomePress={onHomePress}
+          onLogsPress={onLogsPress}
+          onSignOutPress={onSignOutPress}
+          onToDoPress={onToDoPress}
+          color="#9A9E8C"
+        />
         <View style={styles.topDiv}>
           <View style={styles.todayDiv}>
             <Text style={styles.today}>Today</Text>
-            <Text style={styles.today}>01-01-2023</Text>
+            <Text style={styles.today}>
+              {dateState.toLocaleDateString("en-GB", {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </Text>
           </View>
           <View>
-            <Text style={styles.time}>12:00 PM</Text>
+            <Text style={styles.time}>
+              {dateState.toLocaleString("en-US", {
+                hour: "numeric",
+                minute: "numeric",
+                hour12: true,
+              })}
+            </Text>
           </View>
         </View>
         <Text style={styles.flower}>❀</Text>

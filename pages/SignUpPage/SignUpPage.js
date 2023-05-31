@@ -1,38 +1,24 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Text, Pressable, TextInput } from "react-native";
+import validationSchema from "./SignUpValidation";
 import * as yup from "yup";
 import axios from "react-native-axios";
-import CookieManager from "@react-native-cookies/cookies";
 
 const initialValues = {
+  firstName: "",
+  lastName: "",
   email: "",
   password: "",
+  confirm: "",
 };
-
-export const LoginPage = (props) => {
-  const setCookie = (name, value) => {
-    const current = new Date();
-    const expirationDate = new Date(current.getTime() + 86400000);
-    return CookieManager.set(name, `${value}`, {
-      path: "/",
-      expires: expirationDate,
-    });
-  };
-  const validationSchema = yup.object().shape({
-    email: yup.string().email().required(),
-    password: yup.string().required(),
-  });
+export const SignUpPage = (props) => {
   const [formErrors, setFormErrors] = useState(initialValues);
   const [formValues, setFormValues] = useState(initialValues);
-  const [errorMessage, setErrorMessage] = useState("");
-
   const { navigation } = props;
-  const onSignUpPress = () => {
-    navigation.navigate("Sign Up Page");
+  const onLoginPress = () => {
+    navigation.navigate("Login Page");
   };
-  const onHomePress = () => {
-    navigation.navigate("Home Page");
-  };
+
   const handleInputChange = (value, name) => {
     yup
       .reach(validationSchema, name)
@@ -48,61 +34,77 @@ export const LoginPage = (props) => {
         });
       });
   };
-  const handleLoginButton = async () => {
-    if (formValues.email === "" || formValues.password === "") {
-      console.log("here");
-    } else {
-      await axios
-        .post(
-          "https://plannify-ny7u.onrender.com/login",
-          {
-            email: formValues.email,
-            password: formValues.password,
+  const handleSignUpButton = async () => {
+    await axios
+      .post(
+        "https://plannify-ny7u.onrender.com/signUp",
+        {
+          firstName: formValues.firstName,
+          lastName: formValues.lastName,
+          email: formValues.email,
+          password: formValues.password,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
           },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then((response) => {
-          const {
-            data: { token },
-          } = response.data;
-          console.log(response.data.data.user);
-          setCookie("userToken", token);
-          setCookie("userId", response.data.data.user._id);
-          onHomePress();
-        })
-        .catch((err) => {
-          console.log(err);
-          setErrorMessage("Email or password is incorrect!");
-        });
-    }
+        }
+      )
+      .then((res) => {
+        if (res.status === 201) {
+          onLoginPress();
+        }
+      })
+      .catch((err) => console.log("here", err));
   };
   return (
     <View style={styles.mainDiv}>
       <View style={styles.centerDiv}>
         <View style={styles.header}>
-          <Pressable>
-            <Text style={styles.loginHeader}>Login</Text>
+          <Pressable onPress={onLoginPress}>
+            <Text style={styles.loginText}>Login</Text>
           </Pressable>
-          <Pressable onPress={onSignUpPress}>
-            <Text style={styles.signUpHeader}>Sign Up</Text>
+          <Pressable>
+            <Text style={styles.signUpText}>Sign Up</Text>
           </Pressable>
         </View>
         <View style={styles.inputDiv}>
           <View style={styles.flex}>
+            <Text style={styles.inputText}>First Name</Text>
+            <Text style={styles.required}>*</Text>
+          </View>
+          <TextInput
+            name="firstName"
+            autoCapitalize="none"
+            onChangeText={(newText) => {
+              handleInputChange(newText, "firstName");
+            }}
+            style={styles.input}
+          />
+          <Text style={styles.errorMsg}>{formErrors.firstName}</Text>
+          <View style={styles.flex}>
+            <Text style={styles.inputText}>Last Name</Text>
+            <Text style={styles.required}>*</Text>
+          </View>
+          <TextInput
+            name="lastName"
+            autoCapitalize="none"
+            onChangeText={(newText) => {
+              handleInputChange(newText, "lastName");
+            }}
+            style={styles.input}
+          />
+          <Text style={styles.errorMsg}>{formErrors.lastName}</Text>
+          <View style={styles.flex}>
             <Text style={styles.inputText}>Email</Text>
             <Text style={styles.required}>*</Text>
           </View>
-
           <TextInput
             name="email"
+            autoCapitalize="none"
             onChangeText={(newText) => {
               handleInputChange(newText, "email");
             }}
-            autoCapitalize="none"
             style={styles.input}
           />
           <Text style={styles.errorMsg}>{formErrors.email}</Text>
@@ -112,25 +114,33 @@ export const LoginPage = (props) => {
             <Text style={styles.required}>*</Text>
           </View>
           <TextInput
+            name="password"
             autoCapitalize="none"
             secureTextEntry={true}
-            name="password"
             onChangeText={(newText) => {
               handleInputChange(newText, "password");
             }}
             style={styles.input}
           />
           <Text style={styles.errorMsg}>{formErrors.password}</Text>
-        </View>
-        {errorMessage.length > 0 && (
-          <Text style={styles.errorMsgLast}> {errorMessage} </Text>
-        )}
 
-        <Pressable onPress={handleLoginButton} style={styles.button}>
-          <Text style={styles.buttonText}>Login</Text>
-        </Pressable>
-        <Pressable onPress={onSignUpPress} style={styles.button}>
-          <Text style={styles.buttonText}>Create an account</Text>
+          <View style={styles.flex}>
+            <Text style={styles.inputText}>Confirm Password</Text>
+            <Text style={styles.required}>*</Text>
+          </View>
+          <TextInput
+            name="confirm"
+            autoCapitalize="none"
+            onChangeText={(newText) => {
+              handleInputChange(newText, "confirm");
+            }}
+            secureTextEntry={true}
+            style={styles.input}
+          />
+          <Text style={styles.errorMsg}>{formErrors.confirm}</Text>
+        </View>
+        <Pressable onPress={handleSignUpButton} style={styles.button}>
+          <Text style={styles.buttonText}>Sign Up</Text>
         </Pressable>
       </View>
     </View>
@@ -141,13 +151,6 @@ const styles = StyleSheet.create({
     color: "#EE9E44",
     fontSize: 11,
     marginBottom: 10,
-  },
-  errorMsgLast: {
-    color: "#EE9E44",
-    fontSize: 11,
-    marginBottom: 20,
-    marginLeft: 30,
-    marginTop: -18,
   },
 
   header: {
@@ -179,30 +182,31 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingBottom: 10,
     paddingTop: 10,
-    marginBottom: 12,
+    marginBottom: 10,
   },
   buttonText: {
     color: "#FFFFFF",
-    fontWeight: 600,
     fontFamily: "Arial",
+
+    fontWeight: 600,
   },
   inputText: {
     color: "#53524F",
     fontSize: 14,
     fontWeight: 500,
   },
-  loginHeader: {
+  loginText: {
+    fontSize: 12,
+    color: "rgba(83, 82, 79, 1)",
+    fontWeight: 600,
+    paddingRight: 20,
+  },
+  signUpText: {
     fontSize: 12,
     color: "rgba(83, 82, 79, 1)",
     fontWeight: 600,
     paddingRight: 20,
     textDecorationLine: "underline",
-  },
-  signUpHeader: {
-    fontSize: 12,
-    color: "rgba(83, 82, 79, 1)",
-    fontWeight: 600,
-    paddingRight: 20,
   },
 
   mainDiv: {
@@ -215,6 +219,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#F5F5F5",
     width: 300,
     borderRadius: 8,
-    minHeight: 360,
+    minHeight: 550,
   },
 });

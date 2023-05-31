@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   ImageBackground,
-  Image,
   StyleSheet,
   Text,
   View,
@@ -11,12 +10,29 @@ import {
 import { Header } from "../components/Header";
 import { ViewJournalModal } from "../components/ViewJournalModal";
 
-export const LogsPage = () => {
+export const LogsPage = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const openModal = () => {
     setModalVisible(true);
   };
+  const { navigation } = props;
+  const onJournalPress = () => {
+    navigation.navigate("Journal Page");
+  };
+  const onToDoPress = () => {
+    navigation.navigate("To-Do Page");
+  };
+  const onLogsPress = () => {
+    navigation.navigate("Logs Page");
+  };
+  const onHomePress = () => {
+    navigation.navigate("Home Page");
+  };
+  const onSignOutPress = () => {
+    navigation.navigate("Login Page");
+  };
+
   return (
     <View style={styles.mainDiv}>
       <ImageBackground
@@ -24,7 +40,14 @@ export const LogsPage = () => {
         style={styles.backgroundImage}
         source={require("../assets/Dot.png")}
       >
-        <Header color="#F2f2f2" />
+        <Header
+          onJournalPress={onJournalPress}
+          onHomePress={onHomePress}
+          onLogsPress={onLogsPress}
+          onSignOutPress={onSignOutPress}
+          onToDoPress={onToDoPress}
+          color="#F2f2f2"
+        />
 
         <View style={styles.top}>
           <Text style={styles.date}>Date</Text>

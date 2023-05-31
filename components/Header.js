@@ -2,14 +2,31 @@ import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 
 export const Header = (props) => {
-  const { color } = props;
+  const {
+    color,
+    onJournalPress,
+    onToDoPress,
+    onHomePress,
+    onLogsPress,
+    onSignOutPress,
+  } = props;
   return (
     <View style={styles(color).header}>
-      <Text style={styles(color).headerTextRight}>✮✮✮</Text>
-      <Text style={styles(color).headerTextSpace}>Journal</Text>
-      <Text style={styles(color).headerText}>To-Do</Text>
-      <Text style={styles(color).headerText}>Logs</Text>
-      <Text style={styles(color).headerTextLeft}>Sign out</Text>
+      <Text onPress={onHomePress} style={styles(color).headerTextRight}>
+        ✮✮✮
+      </Text>
+      <Text onPress={onJournalPress} style={styles(color).headerTextSpace}>
+        Journal
+      </Text>
+      <Text onPress={onToDoPress} style={styles(color).headerText}>
+        To-Do
+      </Text>
+      <Text onPress={onLogsPress} style={styles(color).headerText}>
+        Logs
+      </Text>
+      <Text onPress={onSignOutPress} style={styles(color).headerTextLeft}>
+        Sign out
+      </Text>
     </View>
   );
 };

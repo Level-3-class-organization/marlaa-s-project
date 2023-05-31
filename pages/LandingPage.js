@@ -8,7 +8,14 @@ import {
   Pressable,
 } from "react-native";
 
-export const LandingPage = () => {
+export const LandingPage = (props) => {
+  const { navigation } = props;
+  const onLoginPress = () => {
+    navigation.navigate("Login Page");
+  };
+  const onSignUpPress = () => {
+    navigation.navigate("Sign Up Page");
+  };
   return (
     <View style={styles.mainDiv}>
       <ImageBackground
@@ -24,10 +31,10 @@ export const LandingPage = () => {
         </View>
 
         <Text style={styles.plannifyText}>Plannify</Text>
-        <Pressable style={styles.button}>
+        <Pressable onPress={onLoginPress} style={styles.button}>
           <Text style={styles.buttonText}>LOGIN</Text>
         </Pressable>
-        <Pressable style={styles.button}>
+        <Pressable onPress={onSignUpPress} style={styles.button}>
           <Text style={styles.buttonText}>SIGN UP</Text>
         </Pressable>
       </ImageBackground>
