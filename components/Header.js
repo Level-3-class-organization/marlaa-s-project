@@ -4,27 +4,30 @@ import { View, StyleSheet, Text } from "react-native";
 export const Header = (props) => {
   const {
     color,
-    onJournalPress,
-    onToDoPress,
-    onHomePress,
-    onLogsPress,
-    onSignOutPress,
+    navigateToHomePage,
+    navigateToLogsPage,
+    navigateToToDoPage,
+    navigateToJournalPage,
+    navigateToLogInPage,
   } = props;
   return (
     <View style={styles(color).header}>
-      <Text onPress={onHomePress} style={styles(color).headerTextRight}>
+      <Text onPress={navigateToHomePage} style={styles(color).headerTextRight}>
         ✮✮✮
       </Text>
-      <Text onPress={onJournalPress} style={styles(color).headerTextSpace}>
+      <Text
+        onPress={navigateToJournalPage}
+        style={styles(color).headerTextSpace}
+      >
         Journal
       </Text>
-      <Text onPress={onToDoPress} style={styles(color).headerText}>
+      <Text onPress={navigateToToDoPage} style={styles(color).headerText}>
         To-Do
       </Text>
-      <Text onPress={onLogsPress} style={styles(color).headerText}>
+      <Text onPress={navigateToLogsPage} style={styles(color).headerText}>
         Logs
       </Text>
-      <Text onPress={onSignOutPress} style={styles(color).headerTextLeft}>
+      <Text onPress={navigateToLogInPage} style={styles(color).headerTextLeft}>
         Sign out
       </Text>
     </View>

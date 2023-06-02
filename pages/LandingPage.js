@@ -10,10 +10,10 @@ import {
 
 export const LandingPage = (props) => {
   const { navigation } = props;
-  const onLoginPress = () => {
+  const navigateToLoginPage = () => {
     navigation.navigate("Login Page");
   };
-  const onSignUpPress = () => {
+  const navigateToSignUpPage = () => {
     navigation.navigate("Sign Up Page");
   };
   return (
@@ -31,10 +31,10 @@ export const LandingPage = (props) => {
         </View>
 
         <Text style={styles.plannifyText}>Plannify</Text>
-        <Pressable onPress={onLoginPress} style={styles.button}>
+        <Pressable onPress={navigateToLoginPage} style={styles.button}>
           <Text style={styles.buttonText}>LOGIN</Text>
         </Pressable>
-        <Pressable onPress={onSignUpPress} style={styles.button}>
+        <Pressable onPress={navigateToSignUpPage} style={styles.button}>
           <Text style={styles.buttonText}>SIGN UP</Text>
         </Pressable>
       </ImageBackground>

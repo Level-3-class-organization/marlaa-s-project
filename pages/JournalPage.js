@@ -19,17 +19,19 @@ export const JournalPage = (props) => {
     return null;
   }
   const { navigation } = props;
-
-  const onToDoPress = () => {
+  const navigateToJournalPage = () => {
+    navigation.navigate("Journal Page");
+  };
+  const navigateToToDoPage = () => {
     navigation.navigate("To-Do Page");
   };
-  const onLogsPress = () => {
+  const navigateToLogsPage = () => {
     navigation.navigate("Logs Page");
   };
-  const onHomePress = () => {
+  const navigateToHomePage = () => {
     navigation.navigate("Home Page");
   };
-  const onSignOutPress = () => {
+  const navigateToLogInPage = () => {
     navigation.navigate("Login Page");
   };
   return (
@@ -41,10 +43,11 @@ export const JournalPage = (props) => {
       >
         <Header
           color="#DADCCF"
-          onHomePress={onHomePress}
-          onLogsPress={onLogsPress}
-          onSignOutPress={onSignOutPress}
-          onToDoPress={onToDoPress}
+          navigateToJournalPage={navigateToJournalPage}
+          navigateToHomePage={navigateToHomePage}
+          navigateToLogsPage={navigateToLogsPage}
+          navigateToLogInPage={navigateToLogInPage}
+          navigateToToDoPage={navigateToToDoPage}
         />
         <Text style={styles.journalTitle}>Journal</Text>
         <View style={styles.container}>

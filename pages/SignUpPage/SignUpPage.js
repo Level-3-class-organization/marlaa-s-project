@@ -15,7 +15,7 @@ export const SignUpPage = (props) => {
   const [formErrors, setFormErrors] = useState(initialValues);
   const [formValues, setFormValues] = useState(initialValues);
   const { navigation } = props;
-  const onLoginPress = () => {
+  const navigateToLoginPage = () => {
     navigation.navigate("Login Page");
   };
 
@@ -52,16 +52,16 @@ export const SignUpPage = (props) => {
       )
       .then((res) => {
         if (res.status === 201) {
-          onLoginPress();
+          navigateToLoginPage();
         }
       })
-      .catch((err) => console.log("here", err));
+      .catch((err) => console.log(err));
   };
   return (
     <View style={styles.mainDiv}>
       <View style={styles.centerDiv}>
         <View style={styles.header}>
-          <Pressable onPress={onLoginPress}>
+          <Pressable onPress={navigateToLoginPage}>
             <Text style={styles.loginText}>Login</Text>
           </Pressable>
           <Pressable>

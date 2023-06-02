@@ -17,19 +17,19 @@ export const LogsPage = (props) => {
     setModalVisible(true);
   };
   const { navigation } = props;
-  const onJournalPress = () => {
+  const navigateToJournalPage = () => {
     navigation.navigate("Journal Page");
   };
-  const onToDoPress = () => {
+  const navigateToToDoPage = () => {
     navigation.navigate("To-Do Page");
   };
-  const onLogsPress = () => {
+  const navigateToLogsPage = () => {
     navigation.navigate("Logs Page");
   };
-  const onHomePress = () => {
+  const navigateToHomePage = () => {
     navigation.navigate("Home Page");
   };
-  const onSignOutPress = () => {
+  const navigateToLogInPage = () => {
     navigation.navigate("Login Page");
   };
 
@@ -41,11 +41,11 @@ export const LogsPage = (props) => {
         source={require("../assets/Dot.png")}
       >
         <Header
-          onJournalPress={onJournalPress}
-          onHomePress={onHomePress}
-          onLogsPress={onLogsPress}
-          onSignOutPress={onSignOutPress}
-          onToDoPress={onToDoPress}
+          navigateToJournalPage={navigateToJournalPage}
+          navigateToHomePage={navigateToHomePage}
+          navigateToLogsPage={navigateToLogsPage}
+          navigateToLogInPage={navigateToLogInPage}
+          navigateToToDoPage={navigateToToDoPage}
           color="#F2f2f2"
         />
 

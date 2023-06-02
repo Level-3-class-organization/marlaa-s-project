@@ -19,19 +19,19 @@ export const HomePage = (props) => {
     setInterval(() => setDateState(new Date()), 30000);
   }, []);
   const { navigation } = props;
-  const onJournalPress = () => {
+  const navigateToJournalPage = () => {
     navigation.navigate("Journal Page");
   };
-  const onToDoPress = () => {
+  const navigateToToDoPage = () => {
     navigation.navigate("To-Do Page");
   };
-  const onLogsPress = () => {
+  const navigateToLogsPage = () => {
     navigation.navigate("Logs Page");
   };
-  const onHomePress = () => {
+  const navigateToHomePage = () => {
     navigation.navigate("Home Page");
   };
-  const onSignOutPress = () => {
+  const navigateToLogInPage = () => {
     navigation.navigate("Login Page");
   };
   const [loaded] = useFonts({
@@ -48,11 +48,11 @@ export const HomePage = (props) => {
         source={require("../assets/DarkerDots.png")}
       >
         <Header
-          onJournalPress={onJournalPress}
-          onHomePress={onHomePress}
-          onLogsPress={onLogsPress}
-          onSignOutPress={onSignOutPress}
-          onToDoPress={onToDoPress}
+          navigateToJournalPage={navigateToJournalPage}
+          navigateToHomePage={navigateToHomePage}
+          navigateToLogsPage={navigateToLogsPage}
+          navigateToLogInPage={navigateToLogInPage}
+          navigateToToDoPage={navigateToToDoPage}
           color="#9A9E8C"
         />
         <View style={styles.topDiv}>

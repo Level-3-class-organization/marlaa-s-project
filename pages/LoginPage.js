@@ -27,10 +27,10 @@ export const LoginPage = (props) => {
   const [errorMessage, setErrorMessage] = useState("");
 
   const { navigation } = props;
-  const onSignUpPress = () => {
+  const navigateToSignUpPage = () => {
     navigation.navigate("Sign Up Page");
   };
-  const onHomePress = () => {
+  const navigateToHomePage = () => {
     navigation.navigate("Home Page");
   };
   const handleInputChange = (value, name) => {
@@ -50,7 +50,7 @@ export const LoginPage = (props) => {
   };
   const handleLoginButton = async () => {
     if (formValues.email === "" || formValues.password === "") {
-      console.log("here");
+      setErrorMessage("Please enter an email and password.");
     } else {
       await axios
         .post(
@@ -69,10 +69,9 @@ export const LoginPage = (props) => {
           const {
             data: { token },
           } = response.data;
-          console.log(response.data.data.user);
           setCookie("userToken", token);
           setCookie("userId", response.data.data.user._id);
-          onHomePress();
+          navigateToHomePage();
         })
         .catch((err) => {
           console.log(err);
@@ -87,7 +86,7 @@ export const LoginPage = (props) => {
           <Pressable>
             <Text style={styles.loginHeader}>Login</Text>
           </Pressable>
-          <Pressable onPress={onSignUpPress}>
+          <Pressable onPress={navigateToSignUpPage}>
             <Text style={styles.signUpHeader}>Sign Up</Text>
           </Pressable>
         </View>
@@ -122,14 +121,14 @@ export const LoginPage = (props) => {
           />
           <Text style={styles.errorMsg}>{formErrors.password}</Text>
         </View>
-        {errorMessage.length > 0 && (
+        {errorMessage != null && (
           <Text style={styles.errorMsgLast}> {errorMessage} </Text>
         )}
 
         <Pressable onPress={handleLoginButton} style={styles.button}>
           <Text style={styles.buttonText}>Login</Text>
         </Pressable>
-        <Pressable onPress={onSignUpPress} style={styles.button}>
+        <Pressable onPress={navigateToSignUpPage} style={styles.button}>
           <Text style={styles.buttonText}>Create an account</Text>
         </Pressable>
       </View>

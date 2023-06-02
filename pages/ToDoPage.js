@@ -31,19 +31,19 @@ export const ToDoPage = (props) => {
     setModalVisible(true);
   };
   const { navigation } = props;
-  const onJournalPress = () => {
+  const navigateToJournalPage = () => {
     navigation.navigate("Journal Page");
   };
-  const onToDoPress = () => {
+  const navigateToToDoPage = () => {
     navigation.navigate("To-Do Page");
   };
-  const onLogsPress = () => {
+  const navigateToLogsPage = () => {
     navigation.navigate("Logs Page");
   };
-  const onHomePress = () => {
+  const navigateToHomePage = () => {
     navigation.navigate("Home Page");
   };
-  const onSignOutPress = () => {
+  const navigateToLogInPage = () => {
     navigation.navigate("Login Page");
   };
   return (
@@ -54,11 +54,11 @@ export const ToDoPage = (props) => {
         source={require("../assets/DarkerDots.png")}
       >
         <Header
-          onJournalPress={onJournalPress}
-          onHomePress={onHomePress}
-          onLogsPress={onLogsPress}
-          onSignOutPress={onSignOutPress}
-          onToDoPress={onToDoPress}
+          navigateToJournalPage={navigateToJournalPage}
+          navigateToHomePage={navigateToHomePage}
+          navigateToLogsPage={navigateToLogsPage}
+          navigateToLogInPage={navigateToLogInPage}
+          navigateToToDoPage={navigateToToDoPage}
           color="#9A9E8C"
         />
         <Text style={styles.toDoTitle}>To-Do-List</Text>
