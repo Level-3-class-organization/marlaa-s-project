@@ -2,14 +2,22 @@ import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 
 export const Header = (props) => {
-  const {
-    color,
-    navigateToHomePage,
-    navigateToLogsPage,
-    navigateToToDoPage,
-    navigateToJournalPage,
-    navigateToLogInPage,
-  } = props;
+  const { color, navigation } = props;
+  const navigateToJournalPage = () => {
+    navigation.navigate("Journal Page");
+  };
+  const navigateToToDoPage = () => {
+    navigation.navigate("To-Do Page");
+  };
+  const navigateToLogsPage = () => {
+    navigation.navigate("Logs Page");
+  };
+  const navigateToHomePage = () => {
+    navigation.navigate("Home Page");
+  };
+  const navigateToLogInPage = () => {
+    navigation.navigate("Login Page");
+  };
   return (
     <View style={styles(color).header}>
       <Text onPress={navigateToHomePage} style={styles(color).headerTextRight}>

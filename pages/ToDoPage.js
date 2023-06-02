@@ -31,21 +31,7 @@ export const ToDoPage = (props) => {
     setModalVisible(true);
   };
   const { navigation } = props;
-  const navigateToJournalPage = () => {
-    navigation.navigate("Journal Page");
-  };
-  const navigateToToDoPage = () => {
-    navigation.navigate("To-Do Page");
-  };
-  const navigateToLogsPage = () => {
-    navigation.navigate("Logs Page");
-  };
-  const navigateToHomePage = () => {
-    navigation.navigate("Home Page");
-  };
-  const navigateToLogInPage = () => {
-    navigation.navigate("Login Page");
-  };
+
   return (
     <View style={styles.mainDiv}>
       <ImageBackground
@@ -53,14 +39,7 @@ export const ToDoPage = (props) => {
         style={styles.backgroundImage}
         source={require("../assets/DarkerDots.png")}
       >
-        <Header
-          navigateToJournalPage={navigateToJournalPage}
-          navigateToHomePage={navigateToHomePage}
-          navigateToLogsPage={navigateToLogsPage}
-          navigateToLogInPage={navigateToLogInPage}
-          navigateToToDoPage={navigateToToDoPage}
-          color="#9A9E8C"
-        />
+        <Header navigation={navigation} color="#9A9E8C" />
         <Text style={styles.toDoTitle}>To-Do-List</Text>
         <View style={styles.scroll}>
           <ScrollView>

@@ -17,21 +17,6 @@ export const LogsPage = (props) => {
     setModalVisible(true);
   };
   const { navigation } = props;
-  const navigateToJournalPage = () => {
-    navigation.navigate("Journal Page");
-  };
-  const navigateToToDoPage = () => {
-    navigation.navigate("To-Do Page");
-  };
-  const navigateToLogsPage = () => {
-    navigation.navigate("Logs Page");
-  };
-  const navigateToHomePage = () => {
-    navigation.navigate("Home Page");
-  };
-  const navigateToLogInPage = () => {
-    navigation.navigate("Login Page");
-  };
 
   return (
     <View style={styles.mainDiv}>
@@ -40,14 +25,7 @@ export const LogsPage = (props) => {
         style={styles.backgroundImage}
         source={require("../assets/Dot.png")}
       >
-        <Header
-          navigateToJournalPage={navigateToJournalPage}
-          navigateToHomePage={navigateToHomePage}
-          navigateToLogsPage={navigateToLogsPage}
-          navigateToLogInPage={navigateToLogInPage}
-          navigateToToDoPage={navigateToToDoPage}
-          color="#F2f2f2"
-        />
+        <Header navigation={navigation} color="#F2f2f2" />
 
         <View style={styles.top}>
           <Text style={styles.date}>Date</Text>

@@ -19,21 +19,7 @@ export const JournalPage = (props) => {
     return null;
   }
   const { navigation } = props;
-  const navigateToJournalPage = () => {
-    navigation.navigate("Journal Page");
-  };
-  const navigateToToDoPage = () => {
-    navigation.navigate("To-Do Page");
-  };
-  const navigateToLogsPage = () => {
-    navigation.navigate("Logs Page");
-  };
-  const navigateToHomePage = () => {
-    navigation.navigate("Home Page");
-  };
-  const navigateToLogInPage = () => {
-    navigation.navigate("Login Page");
-  };
+
   return (
     <View style={styles.mainDiv}>
       <ImageBackground
@@ -41,14 +27,7 @@ export const JournalPage = (props) => {
         style={styles.backgroundImage}
         source={require("../assets/Dot.png")}
       >
-        <Header
-          color="#DADCCF"
-          navigateToJournalPage={navigateToJournalPage}
-          navigateToHomePage={navigateToHomePage}
-          navigateToLogsPage={navigateToLogsPage}
-          navigateToLogInPage={navigateToLogInPage}
-          navigateToToDoPage={navigateToToDoPage}
-        />
+        <Header color="#DADCCF" navigation={navigation} />
         <Text style={styles.journalTitle}>Journal</Text>
         <View style={styles.container}>
           <View style={styles.div}>

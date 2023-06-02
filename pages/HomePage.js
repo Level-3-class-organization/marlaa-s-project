@@ -19,21 +19,7 @@ export const HomePage = (props) => {
     setInterval(() => setDateState(new Date()), 30000);
   }, []);
   const { navigation } = props;
-  const navigateToJournalPage = () => {
-    navigation.navigate("Journal Page");
-  };
-  const navigateToToDoPage = () => {
-    navigation.navigate("To-Do Page");
-  };
-  const navigateToLogsPage = () => {
-    navigation.navigate("Logs Page");
-  };
-  const navigateToHomePage = () => {
-    navigation.navigate("Home Page");
-  };
-  const navigateToLogInPage = () => {
-    navigation.navigate("Login Page");
-  };
+
   const [loaded] = useFonts({
     Mulish1: require("../assets/Mulish1.ttf"),
   });
@@ -47,14 +33,7 @@ export const HomePage = (props) => {
         style={styles.backgroundImage}
         source={require("../assets/DarkerDots.png")}
       >
-        <Header
-          navigateToJournalPage={navigateToJournalPage}
-          navigateToHomePage={navigateToHomePage}
-          navigateToLogsPage={navigateToLogsPage}
-          navigateToLogInPage={navigateToLogInPage}
-          navigateToToDoPage={navigateToToDoPage}
-          color="#9A9E8C"
-        />
+        <Header navigation={navigation} color="#9A9E8C" />
         <View style={styles.topDiv}>
           <View style={styles.todayDiv}>
             <Text style={styles.today}>Today</Text>
