@@ -116,7 +116,7 @@ export const SignUpPage = (props) => {
           <TextInput
             name="password"
             autoCapitalize="none"
-            secureTextEntry={true}
+            // secureTextEntry={true}
             onChangeText={(newText) => {
               handleInputChange(newText, "password");
             }}
@@ -134,7 +134,7 @@ export const SignUpPage = (props) => {
             onChangeText={(newText) => {
               handleInputChange(newText, "confirm");
             }}
-            secureTextEntry={true}
+            // secureTextEntry={true}
             style={styles.input}
           />
           <Text style={styles.errorMsg}>{formErrors.confirm}</Text>

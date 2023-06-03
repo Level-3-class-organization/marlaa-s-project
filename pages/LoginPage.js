@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, View, Text, Pressable, TextInput } from "react-native";
 import * as yup from "yup";
 import axios from "react-native-axios";
-import CookieManager from "@react-native-cookies/cookies";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const initialValues = {
   email: "",
@@ -10,13 +10,13 @@ const initialValues = {
 };
 
 export const LoginPage = (props) => {
-  const setCookie = (name, value) => {
-    const current = new Date();
-    const expirationDate = new Date(current.getTime() + 86400000);
-    return CookieManager.set(name, `${value}`, {
-      path: "/",
-      expires: expirationDate,
-    });
+  const setCookie = async (name, value) => {
+    try {
+      const jsonValue = JSON.stringify(value);
+      await AsyncStorage.setItem(name, jsonValue);
+    } catch (e) {
+      console.log(e);
+    }
   };
   const validationSchema = yup.object().shape({
     email: yup.string().email().required(),
@@ -69,7 +69,6 @@ export const LoginPage = (props) => {
           const {
             data: { token },
           } = response.data;
-          setCookie("userToken", token);
           setCookie("userId", response.data.data.user._id);
           navigateToHomePage();
         })

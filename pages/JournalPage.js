@@ -12,6 +12,7 @@ import { useFonts } from "expo-font";
 import { Header } from "../components/Header";
 
 export const JournalPage = (props) => {
+
   const [loaded] = useFonts({
     Alfa: require("../assets/Alfa.ttf"),
   });
