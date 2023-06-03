@@ -15,6 +15,10 @@ import Clock from "../components/Clock";
 import axios from "react-native-axios";
 import { useUserProvider } from "../provider/UserProvider";
 import { SavedModal } from "../components/SavedModal";
+import { createSleepValues } from "../api/CreateSleep";
+import { createWaterValues } from "../api/CreateWater";
+import { updateSleep } from "../api/UpdateSleep";
+import { updateWater } from "../api/UpdateWater";
 
 export const HomePage = (props) => {
   const [dateState, setDateState] = useState(new Date());
@@ -24,16 +28,12 @@ export const HomePage = (props) => {
   const [sleepData, setSleepData] = useState([]);
   const [waterData, setWaterData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-
   const { navigation } = props;
 
   const [loaded] = useFonts({
     Mulish1: require("../assets/Mulish1.ttf"),
   });
   const openSavedModal = () => {
-    setModalVisible(true);
-  };
-  const openUpdatedModal = () => {
     setModalVisible(true);
   };
   const getSleep = async () => {
@@ -69,59 +69,6 @@ export const HomePage = (props) => {
     setWater({ ...water, [name]: value, ownerId: userId._j });
   };
 
-  const updateSleep = async (hoursSlept, minutesSlept, _id) => {
-    await axios
-      .put(
-        `https://plannify-ny7u.onrender.com/sleep/${_id}`,
-        { ...sleep, ...sleepData },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im9kZHk5NzZAZ21haWwuY29tIiwidXNlcklkIjoiNjQyNGM4ZmU1ZGE0YTU2YjNmZmFkYjlkIiwiaWF0IjoxNjgwMjMyNTg3LCJleHAiOjE2ODAzMTg5ODd9.NknlP8Swrw7dqmh5ABwdNs-WLyGK2XAUjFk7FkCqkJc`,
-          },
-        }
-      )
-      .then((response) => {
-        openUpdatedModal();
-      })
-      .catch((err) => console.log(err));
-  };
-  const updateWater = async (cupsDrank, _id) => {
-    await axios
-      .put(
-        `https://plannify-ny7u.onrender.com/water/${_id}`,
-        { ...water, ...waterData },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im9kZHk5NzZAZ21haWwuY29tIiwidXNlcklkIjoiNjQyNGM4ZmU1ZGE0YTU2YjNmZmFkYjlkIiwiaWF0IjoxNjgwMjMyNTg3LCJleHAiOjE2ODAzMTg5ODd9.NknlP8Swrw7dqmh5ABwdNs-WLyGK2XAUjFk7FkCqkJc`,
-          },
-        }
-      )
-      .then((response) => {
-        openUpdatedModal();
-      })
-      .catch((err) => console.log(err));
-  };
-  const createSleepValues = async (sleep) => {
-    await axios.post(`https://plannify-ny7u.onrender.com/sleep`, sleep, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  };
-  const createWaterValues = async (water) => {
-    await axios.post(
-      `https://plannify-ny7u.onrender.com/water`,
-      water,
-      { cupsTotal: "8" },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-  };
   const handleSaveSleepButton = async (e) => {
     e.preventDefault();
     const values = {
@@ -144,10 +91,10 @@ export const HomePage = (props) => {
         });
     }
     await updateSleep(
-      sleepData[sleepData.length - 1]?.hoursSlept,
-      sleepData[sleepData.length - 1]?.minutesSlept,
-      sleepData[sleepData.length - 1]?._id
-    );
+      sleepData[sleepData.length - 1]?._id,
+      sleep,
+      sleepData
+    ).then(openSavedModal());
   };
   const handleSaveWaterButton = async (e) => {
     e.preventDefault();
@@ -171,9 +118,10 @@ export const HomePage = (props) => {
         });
     }
     await updateWater(
-      waterData[waterData.length - 1]?.cupsDrank,
-      waterData[waterData.length - 1]?._id
-    );
+      waterData[waterData.length - 1]?._id,
+      water,
+      waterData
+    ).then(openSavedModal());
   };
   if (!loaded) {
     return null;
