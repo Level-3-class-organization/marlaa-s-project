@@ -6,6 +6,7 @@ export const UserProviderContext = createContext({});
 
 export const UserProvider = (props) => {
   const { children } = props;
+
   const [user, setUser] = useState(false);
   const [userId, setUserId] = useState("");
   const [token, setToken] = useState("testToken");
@@ -14,10 +15,12 @@ export const UserProvider = (props) => {
     const jsonValue = await AsyncStorage.getItem("userToken");
     return jsonValue != null ? JSON.parse(jsonValue) : null;
   };
+
   const getUserId = async () => {
     const jsonValue = await AsyncStorage.getItem("userId");
     return JSON.parse(jsonValue);
   };
+
   useEffect(() => {
     if (user) {
       const userToken = getCookie();
@@ -26,16 +29,19 @@ export const UserProvider = (props) => {
       setToken(userToken);
     }
   }, [user]);
+
   const value = {
     user,
     token,
     userId: userId,
     setUser,
   };
+
   return (
     <UserProviderContext.Provider value={value}>
       {children}
     </UserProviderContext.Provider>
   );
 };
+
 export const useUserProvider = () => useContext(UserProviderContext);

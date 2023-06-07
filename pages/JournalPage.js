@@ -9,50 +9,49 @@ import {
 } from "react-native";
 import { useFonts } from "expo-font";
 import axios from "react-native-axios";
-
 import { Header } from "../components/Header";
 import { useUserProvider } from "../provider/UserProvider";
 import { createJournal } from "../api/CreateJournal";
 import { SavedModal } from "../components/SavedModal";
 import { updateJournal } from "../api/UpdateJournal";
+import { PROMPTS } from "../components/PROMPTS";
+
 const initialValues = {
   journal: "",
   ownerId: "",
 };
-const promptsArr = [
-  "I am grateful for...",
-  "Daily affirmation",
-  "Three things that happened today:",
-  "How could I have made today better?",
-  "Highlight and lowlight of the day",
-  "What kind of person do you want to be next year?",
-  "Describe your perfect morning.",
-  "What fear can you overcome?",
-  "What kind of day are you having, and why?",
-  "What are strengths in relationships (kindness, empathy, etc.)?",
-  "Describe one or two significant life events that helped shape you into who you are today. ",
-  "Finish this sentence: “My life would be incomplete without …”",
-];
+
 export const JournalPage = (props) => {
-  const [loaded] = useFonts({
-    Alfa: require("../assets/Alfa.ttf"),
-  });
   const { navigation } = props;
+
   const [formValues, setFormValues] = useState(initialValues);
-  const { userId } = useUserProvider();
   const [data, setData] = useState("");
   const [idData, setIdData] = useState("");
   const [message, setMessage] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [randomNum, setRandomNum] = useState(0);
+
+  const { userId } = useUserProvider();
+
+  let random = PROMPTS[randomNum];
+
+  useEffect(() => {
+    getJournal();
+  }, []);
+
+  const [loaded] = useFonts({
+    Alfa: require("../assets/Alfa.ttf"),
+  });
+
   const handleNewPromptClick = () => {
-    const randomNumber = Math.floor(Math.random() * promptsArr.length);
+    const randomNumber = Math.floor(Math.random() * PROMPTS.length);
     setRandomNum(randomNumber);
   };
+
   const openSavedModal = () => {
     setModalVisible(true);
   };
-  let random = promptsArr[randomNum];
+
   const getJournal = async () => {
     await axios
       .get(`https://plannify-ny7u.onrender.com/${userId._j}/journals`)
@@ -62,6 +61,7 @@ export const JournalPage = (props) => {
       })
       .catch((err) => console.log(err));
   };
+
   const handleJournalChange = (value) => {
     setMessage(value);
     setFormValues((formValues) => ({
@@ -93,12 +93,11 @@ export const JournalPage = (props) => {
         });
     }
   };
-  useEffect(() => {
-    getJournal();
-  }, []);
+
   if (!loaded) {
     return null;
   }
+  
   return (
     <View style={styles.mainDiv}>
       <ImageBackground
