@@ -31,7 +31,7 @@ export const JournalPage = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [randomNum, setRandomNum] = useState(0);
 
-  const { userId } = useUserProvider();
+  const { userId, token } = useUserProvider();
 
   let random = PROMPTS[randomNum];
 
@@ -97,7 +97,6 @@ export const JournalPage = (props) => {
   if (!loaded) {
     return null;
   }
-  
   return (
     <View style={styles.mainDiv}>
       <ImageBackground

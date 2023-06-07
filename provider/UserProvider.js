@@ -1,6 +1,6 @@
 import React, { useContext, createContext, useState, useEffect } from "react";
-import CookieManager from "@react-native-cookies/cookies";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GetToken } from "../helper-functions/GetToken";
 
 export const UserProviderContext = createContext({});
 
@@ -11,11 +11,6 @@ export const UserProvider = (props) => {
   const [userId, setUserId] = useState("");
   const [token, setToken] = useState("testToken");
 
-  const getCookie = async () => {
-    const jsonValue = await AsyncStorage.getItem("userToken");
-    return jsonValue != null ? JSON.parse(jsonValue) : null;
-  };
-
   const getUserId = async () => {
     const jsonValue = await AsyncStorage.getItem("userId");
     return JSON.parse(jsonValue);
@@ -23,7 +18,7 @@ export const UserProvider = (props) => {
 
   useEffect(() => {
     if (user) {
-      const userToken = getCookie();
+      const userToken = GetToken();
       const userId = getUserId();
       setUserId(userId);
       setToken(userToken);
