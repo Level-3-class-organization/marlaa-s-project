@@ -3,11 +3,16 @@ import { StyleSheet, View, Text, Pressable, TextInput } from "react-native";
 import * as yup from "yup";
 import axios from "react-native-axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useUserProvider } from "../provider/UserProvider";
 
 const initialValues = {
   email: "",
   password: "",
 };
+const validationSchema = yup.object().shape({
+  email: yup.string().email().required(),
+  password: yup.string().required(),
+});
 
 export const LoginPage = (props) => {
   const setCookie = async (name, value) => {
@@ -18,14 +23,11 @@ export const LoginPage = (props) => {
       console.log(e);
     }
   };
-  const validationSchema = yup.object().shape({
-    email: yup.string().email().required(),
-    password: yup.string().required(),
-  });
+
   const [formErrors, setFormErrors] = useState(initialValues);
   const [formValues, setFormValues] = useState(initialValues);
   const [errorMessage, setErrorMessage] = useState("");
-
+  const { setUser } = useUserProvider();
   const { navigation } = props;
   const navigateToSignUpPage = () => {
     navigation.navigate("Sign Up Page");
@@ -70,6 +72,8 @@ export const LoginPage = (props) => {
             data: { token },
           } = response.data;
           setCookie("userId", response.data.data.user._id);
+          setCookie("userToken", token);
+          setUser(true);
           navigateToHomePage();
         })
         .catch((err) => {

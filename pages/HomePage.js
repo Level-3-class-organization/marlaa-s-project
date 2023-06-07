@@ -29,7 +29,6 @@ export const HomePage = (props) => {
   const [waterData, setWaterData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const { navigation } = props;
-
   const [loaded] = useFonts({
     Mulish1: require("../assets/Mulish1.ttf"),
   });
@@ -61,7 +60,6 @@ export const HomePage = (props) => {
   useEffect(() => {
     getWater();
   }, []);
-
   const handleSleepChange = (value, name) => {
     setSleep({ ...sleep, [name]: value, ownerId: userId._j });
   };
@@ -126,7 +124,6 @@ export const HomePage = (props) => {
   if (!loaded) {
     return null;
   }
-
   return (
     <View style={styles.mainDiv}>
       <ImageBackground

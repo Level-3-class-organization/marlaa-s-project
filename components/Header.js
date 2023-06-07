@@ -1,7 +1,10 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
+import { useUserProvider } from "../provider/UserProvider";
 
 export const Header = (props) => {
+  const { setUser } = useUserProvider();
   const { color, navigation } = props;
   const navigateToJournalPage = () => {
     navigation.navigate("Journal Page");
@@ -15,8 +18,17 @@ export const Header = (props) => {
   const navigateToHomePage = () => {
     navigation.navigate("Home Page");
   };
-  const navigateToLogInPage = () => {
-    navigation.navigate("Login Page");
+  const navigateToLogInPage = async () => {
+    try {
+      await AsyncStorage.removeItem("userId");
+      await AsyncStorage.removeItem("userToken");
+      setUser(false);
+      navigation.navigate("Login Page");
+    } catch {
+      (err) => {
+        console.log(err);
+      };
+    }
   };
   return (
     <View style={styles(color).header}>
