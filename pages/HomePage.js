@@ -20,6 +20,8 @@ import { createSleepValues } from "../api/CreateSleep";
 import { createWaterValues } from "../api/CreateWater";
 import { updateSleep } from "../api/UpdateSleep";
 import { updateWater } from "../api/UpdateWater";
+import { deleteTask } from "../api/DeleteTask";
+import { getTasks } from "../api/GetTasks";
 
 export const HomePage = (props) => {
   const [dateState, setDateState] = useState(new Date());
@@ -57,7 +59,7 @@ export const HomePage = (props) => {
   const getAllData = async () => {
     await getSleep();
     await getWater();
-    await getTasks();
+    await fetchTasks(userId._j);
   };
   useEffect(() => {
     setInterval(() => setDateState(new Date()), 30000);
@@ -70,35 +72,6 @@ export const HomePage = (props) => {
 
   const handleWaterChange = (value, name) => {
     setWater({ ...water, [name]: value, ownerId: userId._j });
-  };
-
-  const getTasks = async () => {
-    await axios
-      .get(`https://plannify-ny7u.onrender.com/${userId._j}/tasks`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        setData(response.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const deleteTask = async (_id) => {
-    await axios
-      .delete(`https://plannify-ny7u.onrender.com/tasks/${_id}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        getTasks();
-      })
-      .catch((err) => console.log(err));
   };
 
   const handleSaveSleepButton = async (e) => {
@@ -157,9 +130,28 @@ export const HomePage = (props) => {
     ).then(openSavedModal());
   };
 
+  const fetchTasks = async (id) => {
+    await getTasks(id)
+      .then((response) => {
+        setData(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleDelete = async (id) => {
+    await deleteTask(id)
+      .then((response) => {
+        fetchTasks(userId._j);
+      })
+      .catch((err) => console.log(err));
+  };
+
   if (!loaded) {
     return null;
   }
+
   return (
     <View style={styles.mainDiv}>
       <ImageBackground
@@ -201,7 +193,7 @@ export const HomePage = (props) => {
               {data?.map((task) => {
                 return (
                   <View key={task._id} style={styles.taskDiv}>
-                    <Pressable onPress={() => deleteTask(task._id)}>
+                    <Pressable onPress={() => handleDelete(task._id)}>
                       <CheckBox
                         lineWidth={2}
                         onFillColor="#626375"

@@ -17,7 +17,7 @@ const initialValues = {
 
 export const CreateTaskModal = (props) => {
   const [formValues, setFormValues] = useState(initialValues);
-  const { setModalVisible, modalVisible, openSavedModal, getTasks } = props;
+  const { setModalVisible, modalVisible, openSavedModal, fetchTasks } = props;
 
   const { userId } = useUserProvider();
 
@@ -39,7 +39,7 @@ export const CreateTaskModal = (props) => {
         .then(async (response) => {
           closeModal();
           openSavedModal();
-          getTasks();
+          await fetchTasks(userId._j);
         })
         .catch((err) => {
           console.log(err);

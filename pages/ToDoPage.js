@@ -15,6 +15,8 @@ import CheckBox from "@react-native-community/checkbox";
 import { CreateTaskModal } from "../components/CreateTaskModal";
 import { SavedModal } from "../components/SavedModal";
 import { useUserProvider } from "../provider/UserProvider";
+import { deleteTask } from "../api/DeleteTask";
+import { getTasks } from "../api/GetTasks";
 
 export const ToDoPage = (props) => {
   const { navigation } = props;
@@ -29,10 +31,10 @@ export const ToDoPage = (props) => {
     Alice: require("../assets/Alice-Regular.ttf"),
   });
 
-  const { userId, token } = useUserProvider();
+  const { userId } = useUserProvider();
 
   useEffect(() => {
-    getTasks();
+    fetchTasks(userId._j);
   }, []);
 
   const openModal = () => {
@@ -41,13 +43,8 @@ export const ToDoPage = (props) => {
   const openSavedModal = () => {
     setSavedModalVisible(true);
   };
-  const getTasks = async () => {
-    await axios
-      .get(`https://plannify-ny7u.onrender.com/${userId._j}/tasks`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
+  const fetchTasks = async (id) => {
+    await getTasks(id)
       .then((response) => {
         setData(response.data);
       })
@@ -55,21 +52,13 @@ export const ToDoPage = (props) => {
         console.log(err);
       });
   };
-
-  const deleteTask = async (_id) => {
-    await axios
-      .delete(`https://plannify-ny7u.onrender.com/tasks/${_id}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
+  const handleDelete = async (id) => {
+    await deleteTask(id)
       .then((response) => {
-        getTasks();
+        fetchTasks(userId._j);
       })
       .catch((err) => console.log(err));
   };
-
   if (!loaded) {
     return null;
   }
@@ -91,7 +80,7 @@ export const ToDoPage = (props) => {
             {data?.map((task) => {
               return (
                 <View key={task._id} style={styles.taskDiv}>
-                  <Pressable onPress={() => deleteTask(task._id)}>
+                  <Pressable onPress={() => handleDelete(task._id)}>
                     <CheckBox
                       lineWidth={2}
                       onFillColor="#626375"
@@ -114,7 +103,7 @@ export const ToDoPage = (props) => {
           setModalVisible={setModalVisible}
           modalVisible={modalVisible}
           openSavedModal={openSavedModal}
-          getTasks={getTasks}
+          fetchTasks={fetchTasks}
         />
         <SavedModal
           text="You have successfully saved your task."
