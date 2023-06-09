@@ -142,7 +142,7 @@ export const JournalPage = (props) => {
           </Pressable>
         </View>
         <SavedModal
-          text="You have successfully saved your input."
+          text="You have successfully saved your journal."
           setModalVisible={setModalVisible}
           modalVisible={modalVisible}
         />

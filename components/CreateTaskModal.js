@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   StyleSheet,
@@ -7,13 +7,46 @@ import {
   TextInput,
   Pressable,
 } from "react-native";
+import { createTask } from "../api/CreateTask";
+import { useUserProvider } from "../provider/UserProvider";
+
+const initialValues = {
+  task: "",
+  ownerId: "",
+};
 
 export const CreateTaskModal = (props) => {
-  const { setModalVisible, modalVisible } = props;
+  const [formValues, setFormValues] = useState(initialValues);
+  const { setModalVisible, modalVisible, openSavedModal, getTasks } = props;
+
+  const { userId } = useUserProvider();
+
+  const handleInputChange = (value, name) => {
+    setFormValues({ ...formValues, [name]: value, ownerId: userId._j });
+  };
+
   const closeModal = () => {
-    Alert.alert("Modal has been closed.");
     setModalVisible(!modalVisible);
   };
+
+  const handleAddButton = async (e) => {
+    e.preventDefault();
+    if (formValues.task.length > 0) {
+      const values = {
+        ...formValues,
+      };
+      await createTask(values)
+        .then(async (response) => {
+          closeModal();
+          openSavedModal();
+          getTasks();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
   return (
     <View>
       <Modal
@@ -27,9 +60,15 @@ export const CreateTaskModal = (props) => {
         <View style={styles.modalDiv}>
           <View style={styles.div}>
             <Text style={styles.addTaskText}>Add a Task:</Text>
-            <TextInput style={styles.taskInput} placeholder="Task"></TextInput>
+            <TextInput
+              onChangeText={(newText) => {
+                handleInputChange(newText, "task");
+              }}
+              style={styles.taskInput}
+              placeholder="Task"
+            ></TextInput>
             <View style={styles.buttonsDiv}>
-              <Pressable style={styles.button}>
+              <Pressable onPress={handleAddButton} style={styles.button}>
                 <Text style={styles.buttonText}>Add</Text>
               </Pressable>
               <Pressable style={styles.button} onPress={() => closeModal()}>

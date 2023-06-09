@@ -6,6 +6,7 @@ import {
   View,
   ScrollView,
   TextInput,
+  Pressable,
 } from "react-native";
 import { Header } from "../components/Header";
 import { useFonts } from "expo-font";
@@ -22,9 +23,10 @@ import { updateWater } from "../api/UpdateWater";
 
 export const HomePage = (props) => {
   const [dateState, setDateState] = useState(new Date());
+  const [data, setData] = useState([]);
   const [water, setWater] = useState("");
   const [sleep, setSleep] = useState("");
-  const { userId } = useUserProvider();
+  const { userId, token } = useUserProvider();
   const [sleepData, setSleepData] = useState([]);
   const [waterData, setWaterData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -32,6 +34,7 @@ export const HomePage = (props) => {
   const [loaded] = useFonts({
     Mulish1: require("../assets/Mulish1.ttf"),
   });
+
   const openSavedModal = () => {
     setModalVisible(true);
   };
@@ -51,20 +54,51 @@ export const HomePage = (props) => {
       })
       .catch((err) => console.log(err));
   };
+  const getAllData = async () => {
+    await getSleep();
+    await getWater();
+    await getTasks();
+  };
   useEffect(() => {
     setInterval(() => setDateState(new Date()), 30000);
+    getAllData();
   }, []);
-  useEffect(() => {
-    getSleep();
-  }, []);
-  useEffect(() => {
-    getWater();
-  }, []);
+
   const handleSleepChange = (value, name) => {
     setSleep({ ...sleep, [name]: value, ownerId: userId._j });
   };
+
   const handleWaterChange = (value, name) => {
     setWater({ ...water, [name]: value, ownerId: userId._j });
+  };
+
+  const getTasks = async () => {
+    await axios
+      .get(`https://plannify-ny7u.onrender.com/${userId._j}/tasks`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        setData(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const deleteTask = async (_id) => {
+    await axios
+      .delete(`https://plannify-ny7u.onrender.com/tasks/${_id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        getTasks();
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleSaveSleepButton = async (e) => {
@@ -94,6 +128,7 @@ export const HomePage = (props) => {
       sleepData
     ).then(openSavedModal());
   };
+
   const handleSaveWaterButton = async (e) => {
     e.preventDefault();
     const values = {
@@ -121,6 +156,7 @@ export const HomePage = (props) => {
       waterData
     ).then(openSavedModal());
   };
+
   if (!loaded) {
     return null;
   }
@@ -159,36 +195,26 @@ export const HomePage = (props) => {
           <Text style={styles.toDoText}>To-Do List</Text>
           <View style={styles.scrollDiv}>
             <ScrollView>
-              <View style={styles.taskDiv}>
-                <CheckBox
-                  lineWidth={2}
-                  onFillColor="#626375"
-                  onCheckColor="white"
-                  boxType="square"
-                  style={styles.checkbox}
-                />
-                <Text style={styles.task}>Task 1</Text>
-              </View>
-              <View style={styles.taskDiv}>
-                <CheckBox
-                  lineWidth={2}
-                  onFillColor="#626375"
-                  onCheckColor="white"
-                  boxType="square"
-                  style={styles.checkbox}
-                />
-                <Text style={styles.task}>Task 2</Text>
-              </View>
-              <View style={styles.taskDiv}>
-                <CheckBox
-                  lineWidth={2}
-                  onFillColor="#626375"
-                  onCheckColor="white"
-                  boxType="square"
-                  style={styles.checkbox}
-                />
-                <Text style={styles.task}>Task 3</Text>
-              </View>
+              {data.length === 0 && (
+                <Text style={styles.noTask}>• You have no tasks.</Text>
+              )}
+              {data?.map((task) => {
+                return (
+                  <View key={task._id} style={styles.taskDiv}>
+                    <Pressable onPress={() => deleteTask(task._id)}>
+                      <CheckBox
+                        lineWidth={2}
+                        onFillColor="#626375"
+                        onCheckColor="white"
+                        boxType="square"
+                        style={styles.checkbox}
+                      />
+                    </Pressable>
+
+                    <Text style={styles.task}>{task.task}</Text>
+                  </View>
+                );
+              })}
             </ScrollView>
           </View>
         </View>
@@ -356,7 +382,7 @@ const styles = StyleSheet.create({
   },
   div: {
     position: "absolute",
-    right: 40,
+    right: 30,
     top: 180,
   },
   task: {
@@ -364,6 +390,12 @@ const styles = StyleSheet.create({
     color: "#3B3C49",
     fontFamily: "Mulish1",
     marginLeft: -4,
+  },
+  noTask: {
+    fontSize: 15,
+    color: "#3B3C49",
+    fontFamily: "Mulish1",
+    marginLeft: 0,
   },
   checkbox: {
     transform: [{ scaleX: 0.6 }, { scaleY: 0.6 }],
