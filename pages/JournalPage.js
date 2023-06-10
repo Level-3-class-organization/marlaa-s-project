@@ -11,10 +11,12 @@ import { useFonts } from "expo-font";
 import axios from "react-native-axios";
 import { Header } from "../components/Header";
 import { useUserProvider } from "../provider/UserProvider";
-import { createJournal } from "../api/CreateJournal";
+import { createJournal } from "../api/journal/CreateJournal";
 import { SavedModal } from "../components/SavedModal";
-import { updateJournal } from "../api/UpdateJournal";
+import { updateJournal } from "../api/journal/UpdateJournal";
 import { PROMPTS } from "../components/PROMPTS";
+import { getJournal } from "../api/journal/GetJournal";
+import { getTasks } from "../api/task/GetTasks";
 
 const initialValues = {
   journal: "",
@@ -31,18 +33,27 @@ export const JournalPage = (props) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [randomNum, setRandomNum] = useState(0);
 
-  const { userId, token } = useUserProvider();
+  const { userId } = useUserProvider();
 
   let random = PROMPTS[randomNum];
 
   useEffect(() => {
-    getJournal();
+    fetchJournal(userId._j);
   }, []);
 
   const [loaded] = useFonts({
     Alfa: require("../assets/Alfa.ttf"),
   });
-
+  const fetchJournal = async (id) => {
+    await getJournal(id)
+      .then((response) => {
+        setData(response.data[response.data.length - 1]?.journal);
+        setIdData(response.data[response.data.length - 1]?._id);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   const handleNewPromptClick = () => {
     const randomNumber = Math.floor(Math.random() * PROMPTS.length);
     setRandomNum(randomNumber);
@@ -50,16 +61,6 @@ export const JournalPage = (props) => {
 
   const openSavedModal = () => {
     setModalVisible(true);
-  };
-
-  const getJournal = async () => {
-    await axios
-      .get(`https://plannify-ny7u.onrender.com/${userId._j}/journals`)
-      .then((response) => {
-        setData(response.data[response.data.length - 1]?.journal);
-        setIdData(response.data[response.data.length - 1]?._id);
-      })
-      .catch((err) => console.log(err));
   };
 
   const handleJournalChange = (value) => {

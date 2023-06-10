@@ -1,13 +1,13 @@
 import axios from "react-native-axios";
-import { GetToken } from "../helper-functions/GetToken";
+import { GetToken } from "../../helper-functions/GetToken";
 
-export const updateWater = async (_id, water, waterData) => {
+export const updateSleep = async (_id, sleep, sleepData) => {
   try {
     const token = await GetToken();
 
     await axios.put(
-      `https://plannify-ny7u.onrender.com/water/${_id}`,
-      { ...water, ...waterData },
+      `https://plannify-ny7u.onrender.com/sleep/${_id}`,
+      { ...sleep, ...sleepData },
       {
         headers: {
           "Content-Type": "application/json",

@@ -1,13 +1,12 @@
 import axios from "react-native-axios";
-import { GetToken } from "../helper-functions/GetToken";
+import { GetToken } from "../../helper-functions/GetToken";
 
-export const updateSleep = async (_id, sleep, sleepData) => {
+export const updateJournal = async (message, _id) => {
   try {
     const token = await GetToken();
-
     await axios.put(
-      `https://plannify-ny7u.onrender.com/sleep/${_id}`,
-      { ...sleep, ...sleepData },
+      `https://plannify-ny7u.onrender.com/journals/${_id}`,
+      { journal: message },
       {
         headers: {
           "Content-Type": "application/json",

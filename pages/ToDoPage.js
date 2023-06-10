@@ -15,8 +15,8 @@ import CheckBox from "@react-native-community/checkbox";
 import { CreateTaskModal } from "../components/CreateTaskModal";
 import { SavedModal } from "../components/SavedModal";
 import { useUserProvider } from "../provider/UserProvider";
-import { deleteTask } from "../api/DeleteTask";
-import { getTasks } from "../api/GetTasks";
+import { deleteTask } from "../api/task/DeleteTask";
+import { getTasks } from "../api/task/GetTasks";
 
 export const ToDoPage = (props) => {
   const { navigation } = props;

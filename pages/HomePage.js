@@ -16,12 +16,14 @@ import Clock from "../components/Clock";
 import axios from "react-native-axios";
 import { useUserProvider } from "../provider/UserProvider";
 import { SavedModal } from "../components/SavedModal";
-import { createSleepValues } from "../api/CreateSleep";
-import { createWaterValues } from "../api/CreateWater";
-import { updateSleep } from "../api/UpdateSleep";
-import { updateWater } from "../api/UpdateWater";
-import { deleteTask } from "../api/DeleteTask";
-import { getTasks } from "../api/GetTasks";
+import { createSleepValues } from "../api/sleep/CreateSleep";
+import { createWaterValues } from "../api/water/CreateWater";
+import { updateSleep } from "../api/sleep/UpdateSleep";
+import { updateWater } from "../api/water/UpdateWater";
+import { deleteTask } from "../api/task/DeleteTask";
+import { getTasks } from "../api/task/GetTasks";
+import { getSleep } from "../api/sleep/GetSleep";
+import { getWater } from "../api/water/GetWater";
 
 export const HomePage = (props) => {
   const [dateState, setDateState] = useState(new Date());
@@ -40,25 +42,24 @@ export const HomePage = (props) => {
   const openSavedModal = () => {
     setModalVisible(true);
   };
-  const getSleep = async () => {
-    await axios
-      .get(`https://plannify-ny7u.onrender.com/${userId._j}/sleeps`)
+  const fetchSleep = async (id) => {
+    await getSleep(id)
       .then((response) => {
         setSleepData(response.data);
       })
       .catch((err) => console.log(err));
   };
-  const getWater = async () => {
-    await axios
-      .get(`https://plannify-ny7u.onrender.com/${userId._j}/waters`)
+  const fetchWater = async (id) => {
+    await getWater(id)
       .then((response) => {
         setWaterData(response.data);
       })
       .catch((err) => console.log(err));
   };
+
   const getAllData = async () => {
-    await getSleep();
-    await getWater();
+    await fetchSleep(userId._j);
+    await fetchWater(userId._j);
     await fetchTasks(userId._j);
   };
   useEffect(() => {
@@ -81,6 +82,9 @@ export const HomePage = (props) => {
     };
     if (!values.minutesSlept) {
       values.minutesSlept = "0";
+    }
+    if (!values.hoursSlept) {
+      values.hoursSlept = "0";
     }
     if (sleepData.length <= 0) {
       if (!values.hoursSlept) {

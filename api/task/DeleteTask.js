@@ -1,5 +1,5 @@
 import axios from "react-native-axios";
-import { GetToken } from "../helper-functions/GetToken";
+import { GetToken } from "../../helper-functions/GetToken";
 
 export const deleteTask = async (_id) => {
   try {
