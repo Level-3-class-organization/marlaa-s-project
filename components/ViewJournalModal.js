@@ -1,32 +1,24 @@
 import React from "react";
-import { View, StyleSheet, Text, Modal, Pressable } from "react-native";
+import { View, StyleSheet, Text, Pressable } from "react-native";
+import Modal from "react-native-modal";
 
 export const ViewJournalModal = (props) => {
-  const { setModalVisible, modalVisible } = props;
+  const { setModalVisible, modalVisible, text } = props;
   const closeModal = () => {
     setModalVisible(!modalVisible);
   };
   return (
     <View>
       <Modal
-        animationType="fade"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          closeModal();
-        }}
+        animationIn={"zoomIn"}
+        animationOut={"zoomOut"}
+        isVisible={modalVisible}
+        backdropOpacity={0.1}
       >
         <View style={styles.modalDiv}>
           <View style={styles.div}>
-            <Text style={styles.journalText}>
-              Hello, today I was walking to my house and then Hello, today I was
-              walking to my house and then Hello, today I was walking to my
-              house and then Hello, today I was walking to my house and then
-              Hello, today I was walking to my house and then Hello, today I was
-              walking to my house and then Hello, today I was walking to my
-              house and then
-            </Text>
-            <Pressable style={styles.closeButton} onPress={() => closeModal()}>
+            <Text style={styles.journalText}>{text}</Text>
+            <Pressable style={styles.closeButton} onPress={()=>closeModal()}>
               <Text style={styles.buttonText}>Close</Text>
             </Pressable>
           </View>

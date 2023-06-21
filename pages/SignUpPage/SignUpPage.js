@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Text, Pressable, TextInput } from "react-native";
 import validationSchema from "./SignUpValidation";
 import * as yup from "yup";
-import axios from "react-native-axios";
+import { getUsers } from "../../api/user/GetUsers";
 
 const initialValues = {
   firstName: "",
@@ -14,10 +14,24 @@ const initialValues = {
 export const SignUpPage = (props) => {
   const [formErrors, setFormErrors] = useState(initialValues);
   const [formValues, setFormValues] = useState(initialValues);
+  const [data, setData] = useState([]);
   const { navigation } = props;
   const navigateToLoginPage = () => {
     navigation.navigate("Login Page");
   };
+  const fetchUsers = async () => {
+    await getUsers()
+      .then((response) => {
+        setData(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
   const handleInputChange = (value, name) => {
     yup
@@ -35,27 +49,41 @@ export const SignUpPage = (props) => {
       });
   };
   const handleSignUpButton = async () => {
-    await axios
-      .post(
-        "https://plannify-ny7u.onrender.com/signUp",
-        {
-          firstName: formValues.firstName,
-          lastName: formValues.lastName,
-          email: formValues.email,
-          password: formValues.password,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
+    const result = data.find((user) => user.email == formValues.email);
+
+    if (result) {
+      setFormErrors({
+        ...formErrors,
+        confirm: "Email already exists.",
+      });
+    } else if (formValues.password != formValues.confirm) {
+      setFormErrors({
+        ...formErrors,
+        confirm: "Passwords do not match.",
+      });
+    } else {
+      await axios
+        .post(
+          "https://plannify-ny7u.onrender.com/signUp",
+          {
+            firstName: formValues.firstName,
+            lastName: formValues.lastName,
+            email: formValues.email,
+            password: formValues.password,
           },
-        }
-      )
-      .then((res) => {
-        if (res.status === 201) {
-          navigateToLoginPage();
-        }
-      })
-      .catch((err) => console.log(err));
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((res) => {
+          if (res.status === 201) {
+            navigateToLoginPage();
+          }
+        })
+        .catch((err) => console.log(err));
+    }
   };
   return (
     <View style={styles.mainDiv}>
@@ -116,7 +144,7 @@ export const SignUpPage = (props) => {
           <TextInput
             name="password"
             autoCapitalize="none"
-            // secureTextEntry={true}
+            secureTextEntry={true}
             onChangeText={(newText) => {
               handleInputChange(newText, "password");
             }}
@@ -134,7 +162,7 @@ export const SignUpPage = (props) => {
             onChangeText={(newText) => {
               handleInputChange(newText, "confirm");
             }}
-            // secureTextEntry={true}
+            secureTextEntry={true}
             style={styles.input}
           />
           <Text style={styles.errorMsg}>{formErrors.confirm}</Text>

@@ -13,7 +13,6 @@ import { useFonts } from "expo-font";
 import CheckBox from "@react-native-community/checkbox";
 import Water from "../components/Water";
 import Clock from "../components/Clock";
-import axios from "react-native-axios";
 import { useUserProvider } from "../provider/UserProvider";
 import { SavedModal } from "../components/SavedModal";
 import { createSleepValues } from "../api/sleep/CreateSleep";
@@ -24,6 +23,7 @@ import { deleteTask } from "../api/task/DeleteTask";
 import { getTasks } from "../api/task/GetTasks";
 import { getSleep } from "../api/sleep/GetSleep";
 import { getWater } from "../api/water/GetWater";
+import { createJournal } from "../api/journal/CreateJournal";
 
 export const HomePage = (props) => {
   const [dateState, setDateState] = useState(new Date());
@@ -66,6 +66,15 @@ export const HomePage = (props) => {
     setInterval(() => setDateState(new Date()), 30000);
     getAllData();
   }, []);
+  const restartData = async (id) => {
+    await createSleepValues({
+      hoursSlept: "0",
+      minutesSlept: "0",
+      ownerId: id,
+    });
+    await createWaterValues({ cupsDrank: "0", ownerId: id, cupsTotal: "0" });
+    await createJournal({ journal: "", ownerId: id });
+  };
 
   const handleSleepChange = (value, name) => {
     setSleep({ ...sleep, [name]: value, ownerId: userId._j });
@@ -90,7 +99,6 @@ export const HomePage = (props) => {
       if (!values.hoursSlept) {
         setError(true);
       }
-
       await createSleepValues(values)
         .then(async (response) => {
           openSavedModal();
@@ -98,14 +106,14 @@ export const HomePage = (props) => {
         .catch((err) => {
           console.log(err);
         });
+    } else {
+      await updateSleep(
+        sleepData[sleepData.length - 1]?._id,
+        sleep,
+        sleepData
+      ).then(openSavedModal());
     }
-    await updateSleep(
-      sleepData[sleepData.length - 1]?._id,
-      sleep,
-      sleepData
-    ).then(openSavedModal());
   };
-
   const handleSaveWaterButton = async (e) => {
     e.preventDefault();
     const values = {
@@ -126,14 +134,14 @@ export const HomePage = (props) => {
         .catch((err) => {
           console.log(err);
         });
+    } else {
+      await updateWater(
+        waterData[waterData.length - 1]?._id,
+        water,
+        waterData
+      ).then(openSavedModal());
     }
-    await updateWater(
-      waterData[waterData.length - 1]?._id,
-      water,
-      waterData
-    ).then(openSavedModal());
   };
-
   const fetchTasks = async (id) => {
     await getTasks(id)
       .then((response) => {

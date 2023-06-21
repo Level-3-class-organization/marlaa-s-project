@@ -9,7 +9,6 @@ import {
 } from "react-native";
 
 import { useFonts } from "expo-font";
-import axios from "react-native-axios";
 import { Header } from "../components/Header";
 import CheckBox from "@react-native-community/checkbox";
 import { CreateTaskModal } from "../components/CreateTaskModal";
